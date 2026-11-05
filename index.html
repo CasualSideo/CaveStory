@@ -1,200 +1,173 @@
 <!doctype html>
-<html lang="en-us">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	<title>Cave Story Web</title>
-	<meta content="Cave Story Web" property="og:title" />
-	<meta content="The freeware build of Cave Story 100% playable in the browser." property="og:description" />
-	<meta content="https://vinmannie.github.io/CaveStory/" property="og:url" />
-	<meta content="https://vinmannie.github.io/CaveStory/cavestory.png" property="og:image" />
-	<meta content="#6f9cd6" data-react-helmet="true" name="theme-color" />
-    <style>
-      .emscripten { padding-right: 0; margin-left: auto; margin-right: auto; display: block; }
-      textarea.emscripten { font-family: monospace; width: 80%; }
-      div.emscripten { text-align: center; }
-      div.emscripten_border { border: 1px solid black; }
-      /* the canvas *must not* have any border or padding, or mouse coords will be wrong */
-      canvas.emscripten { border: 0px none; background-color: black; -ms-interpolation-mode: nearest-neighbor; image-rendering: optimizeSpeed; image-rendering: -webkit-optimize-contrast; image-rendering: -moz-crisp-edges; image-rendering: -o-crisp-edges; image-rendering: crisp-edges; image-rendering: pixelated;}
-      .spinner {
-        height: 50px;
-        width: 50px;
-        margin: 0px auto;
-        -webkit-animation: rotation .8s linear infinite;
-        -moz-animation: rotation .8s linear infinite;
-        -o-animation: rotation .8s linear infinite;
-        animation: rotation 0.8s linear infinite;
-        border-left: 10px solid rgb(0,150,240);
-        border-right: 10px solid rgb(0,150,240);
-        border-bottom: 10px solid rgb(0,150,240);
-        border-top: 10px solid rgb(100,0,200);
-        border-radius: 100%;
-        background-color: rgb(200,100,250);
-      }
-      @-webkit-keyframes rotation {
-        from {-webkit-transform: rotate(0deg);}
-        to {-webkit-transform: rotate(360deg);}
-      }
-      @-moz-keyframes rotation {
-        from {-moz-transform: rotate(0deg);}
-        to {-moz-transform: rotate(360deg);}
-      }
-      @-o-keyframes rotation {
-        from {-o-transform: rotate(0deg);}
-        to {-o-transform: rotate(360deg);}
-      }
-      @keyframes rotation {
-        from {transform: rotate(0deg);}
-        to {transform: rotate(360deg);}
-      }
-
-  .content {
-    padding-left:20%;
-    padding-right:20%;
-  }
-
-@media screen and (max-width: 900px) {
-  .content {
-    padding-left:0%;
-    padding-right:0%;
-  }
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cave Story Webport</title>
+<meta property="og:title" content="Cave Story">
+<meta property="og:description" content="The freeware build of Cave Story, playable in your browser.">
+<meta property="og:image" content="cavestory.png">
+<meta name="theme-color" content="#0d1626">
+<link rel="icon" href="cavestory.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DotGothic16&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cave:#0d1626; --rock:#1b2a47; --rock-hi:#2c4270; --sky:#6f9cd6;
+  --ink:#f4f4f0; --dim:#9fb0cf; --hp:#f6d53c; --hp-lost:#d2323b;
+  --pixel:"DotGothic16","Hiragino Kaku Gothic ProN","Yu Gothic",ui-monospace,monospace;
+  --body:ui-rounded,"Trebuchet MS",system-ui,sans-serif;
 }
-    </style>
-  </head>
-  <body>
-   <!--
-   <hr/>
-   -->
-    <h1 style="font-family:serif;text-align:center;"><u>Cave Story</u></h1>
-    <h4 style="font-family:serif;text-align:center;">Doukutsu Monogatari</h4>
-    <figure style="overflow:visible;" id="spinner"><div class="spinner"></div><center style="margin-top:0.5em"><strong>emscripten</strong></center></figure>
-    <div class="emscripten" id="status">Downloading...</div>
-    <div class="emscripten">
-      <progress value="0" max="100" id="progress" hidden=1></progress>  
-    </div>
- <!--   <div class="emscripten_border"> -->
-      <canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault()"></canvas>
-	  <script type='text/javascript'>
-              function goFullScreen(){
-                var canvas = document.getElementById("canvas");
-                if(canvas.requestFullScreen)
-                    canvas.requestFullScreen();
-                else if(canvas.webkitRequestFullScreen)
-                    canvas.webkitRequestFullScreen();
-                else if(canvas.mozRequestFullScreen)
-                    canvas.mozRequestFullScreen();
-              }
-	   </script>
-      <p style='text-align:center;'><button onclick="goFullScreen();">Go Fullscreen</button>
-<!--    </div>-->
+*{box-sizing:border-box}
+html{background:var(--cave)}
+body{
+  margin:0; min-height:100vh; color:var(--ink); font:1rem/1.6 var(--body);
+  padding:max(1.25rem,env(safe-area-inset-top)) 1.25rem max(2rem,env(safe-area-inset-bottom));
+  background:
+    radial-gradient(60rem 30rem at 50% -8rem, #24396a 0%, transparent 70%),
+    linear-gradient(var(--cave), #080e1a 70%);
+}
+.wrap{max-width:68rem;margin:0 auto}
+header{display:flex;align-items:baseline;gap:1rem;flex-wrap:wrap;margin-bottom:1.25rem}
+h1{font:400 clamp(2rem,6vw,3.25rem)/1 var(--pixel);margin:0;letter-spacing:.04em}
+header p{margin:0;font:1.1rem var(--pixel);color:var(--sky)}
 
-    <hr/>
+
+.box{background:#000;box-shadow:0 0 0 2px #000,0 0 0 4px var(--ink);border-radius:2px}
+
+.screen{position:relative;aspect-ratio:4/3;width:min(100%,calc((100svh - 11rem)*4/3));min-width:min(100%,20rem);margin:0 auto 1.5rem;overflow:hidden}
+canvas{display:block;width:100%;height:100%;border:0;padding:0;background:#000;image-rendering:pixelated;image-rendering:crisp-edges;outline:none}
+canvas:fullscreen{width:100vw;height:100vh;object-fit:contain}
+
+.overlay{position:absolute;inset:0;display:grid;place-content:center;justify-items:center;gap:1.25rem;background:#000;padding:1rem;text-align:center;transition:opacity .4s}
+.overlay[hidden]{display:none}
+.overlay.fade{opacity:0;pointer-events:none}
+.hp{display:flex;align-items:center;gap:.6rem;font:1.25rem var(--pixel)}
+.hp .bar{width:min(16rem,60vw);height:1rem;background:var(--hp-lost);border:2px solid var(--ink);padding:2px;background-clip:content-box}
+.hp .fill{height:100%;width:0;background:var(--hp);transition:width .15s steps(8)}
+#status{margin:0;font:1rem var(--pixel);color:var(--dim);max-width:28rem;min-height:1.6em}
+#play{font:1.5rem var(--pixel);color:var(--ink);background:#000;padding:.4rem 1.6rem;border:0;cursor:pointer;box-shadow:0 0 0 2px #000,0 0 0 4px var(--ink)}
+#play:hover,#play:focus-visible{background:var(--rock);outline:none}
+#play[hidden]{display:none}
+#play::after{content:"\25BC";margin-left:.7rem;font-size:.9rem;animation:blink 1s steps(2) infinite}
+@keyframes blink{50%{opacity:0}}
+
+.bar-actions{display:flex;justify-content:center;margin:-.5rem auto 2rem}
+.bar-actions button{font:1rem var(--pixel);color:var(--ink);background:var(--rock);border:2px solid var(--rock-hi);padding:.35rem 1rem;cursor:pointer}
+.bar-actions button:hover,.bar-actions button:focus-visible{background:var(--rock-hi);outline:none}
+
+.info{display:grid;grid-template-columns:3fr 2fr;gap:2rem}
+@media(max-width:760px){.info{grid-template-columns:1fr}}
+.info section{padding:1.25rem 1.5rem}
+h2{font:400 1.35rem var(--pixel);margin:0 0 .75rem;color:var(--hp)}
+dl{display:grid;grid-template-columns:auto 1fr;gap:.35rem 1.25rem;margin:0}
+dt{display:flex;gap:.3rem}
+dd{margin:0;color:var(--dim)}
+kbd{font:.95rem var(--pixel);background:var(--rock);border:1px solid var(--rock-hi);border-bottom-width:3px;border-radius:3px;padding:0 .45rem;min-width:1.8rem;text-align:center;color:var(--ink)}
+.about p{margin:0 0 .9rem;color:var(--dim);max-width:36rem}
+.about a{color:var(--sky)}
+footer{margin-top:2.5rem;text-align:center;font-size:.85rem;color:#8193b3}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Cave Story</h1>
+    <p>洞窟物語</p>
+  </header>
+
+  <main>
+    <div class="screen box" id="screen">
+      <canvas id="canvas" tabindex="0" aria-label="Cave Story game screen" oncontextmenu="event.preventDefault()"></canvas>
+      <div class="overlay" id="overlay">
+        <div class="hp" aria-hidden="true">HP<div class="bar"><div class="fill" id="fill"></div></div></div>
+        <p id="status" role="status" aria-live="polite">Downloading…</p>
+        <button id="play" type="button" hidden>Play</button>
+      </div>
+    </div>
+    <div class="bar-actions"><button id="fs" type="button">Fullscreen</button></div>
+
+    <div class="info">
+      <section class="box" aria-labelledby="c">
+        <h2 id="c">Controls</h2>
+        <dl>
+          <dt><kbd>←</kbd><kbd>↑</kbd><kbd>↓</kbd><kbd>→</kbd></dt><dd>Move, look up or down</dd>
+          <dt><kbd>Z</kbd></dt><dd>Jump, confirm</dd>
+          <dt><kbd>X</kbd></dt><dd>Fire, cancel</dd>
+          <dt><kbd>A</kbd><kbd>S</kbd></dt><dd>Switch weapon</dd>
+          <dt><kbd>Q</kbd></dt><dd>Inventory</dd>
+          <dt><kbd>W</kbd></dt><dd>Map</dd>
+          <dt><kbd>Esc</kbd></dt><dd>Pause menu</dd>
+        </dl>
+        <p style="margin:.9rem 0 0;color:var(--dim)">A gamepad works too. Plug it in and press any button.</p>
+      </section>
+      <section class="about" aria-labelledby="a">
+        <h2 id="a">About this port</h2>
+        <p>Cave Story is a freeware game by Studio Pixel (Daisuke “Pixel” Amaya). This build runs the CSE2 engine in WebAssembly.</p>
+        <p>Port by <a href="https://sonicresearch.org/clownacy/cave.html">Clownacy</a>, based on <a href="https://gitlab.com/ilikebreadtoomuch/CSE2/-/tree/emscripten">CSE2</a>. Learn more at <a href="https://cavestory.org">cavestory.org</a>.</p>
+      </section>
+    </div>
+  </main>
+  <footer>Game saves will stay in your browser. Do NOT clear you browser data or else your save file will die.</footer>
+</div>
+
+<script>
+(function(){
+  var $=function(id){return document.getElementById(id)};
+  var canvas=$('canvas'), status=$('status'), fill=$('fill'), play=$('play'), overlay=$('overlay');
+  var ready=false, started=false, failed=false;
+
+  function say(t){status.textContent=t}
+  function fail(t){failed=true;fill.style.width='0';play.hidden=true;overlay.hidden=false;overlay.classList.remove('fade');say(t)}
+
+  if(location.protocol==='file:'){
+    fail('Open this page through a web server, not as a file. In this folder run: python3 -m http.server');
+    return;
+  }
+
+  window.Module={
+    canvas:canvas,
+    print:function(){},
+    printErr:function(t){console.error(t)},
+    totalDependencies:0,
+    postRun:[function(){ready=true;if(!failed){fill.style.width='100%';say('Ready.');play.hidden=false;play.focus()}}],
+    setStatus:function(text){
+      if(failed||!text)return;
+      var m=text.match(/([^(]+)\((\d+(?:\.\d+)?)\/(\d+)\)/);
+      if(m){fill.style.width=Math.round(m[2]/m[3]*100)+'%';say(m[1].trim()+'…')}
+      else say(text);
+    },
+    monitorRunDependencies:function(left){
+      this.totalDependencies=Math.max(this.totalDependencies,left);
+      Module.setStatus(left?'Preparing… ('+(this.totalDependencies-left)+'/'+this.totalDependencies+')':'Starting…');
+    }
+  };
+  canvas.addEventListener('webglcontextlost',function(e){e.preventDefault();fail('The graphics context was lost. Reload the page to keep playing.')});
+  window.addEventListener('error',function(){if(!ready)fail('The game failed to load. Check the browser console, then reload.')});
+
+  function resumeAudio(){
+    var c=window.Module&&Module.SDL2&&Module.SDL2.audioContext;
+    if(c&&c.state==='suspended')c.resume();
+  }
+  play.addEventListener('click',function(){
+    started=true;resumeAudio();canvas.focus();
+    overlay.classList.add('fade');setTimeout(function(){overlay.hidden=true},400);
+  });
+  ['click','keydown','touchend'].forEach(function(ev){document.addEventListener(ev,resumeAudio)});
 
  
-    <div class='content' style='text-align:center;font-family:"Trebuchet MS",Helvetica,sans-serif;'>
-		<strong>This is a modification/archive of sonicresearch.org/clownacy/cave.html.</strong>
-		<p>
-			Primarily, I did this to add a fullscreen button and 
-			to ensure it doesn't get blocked by common
-			web filters. I did not make this Emscripten port.
-		</p>
+  window.addEventListener('keydown',function(e){
+    if(started&&['ArrowUp','ArrowDown','ArrowLeft','ArrowRight',' '].indexOf(e.key)>-1)e.preventDefault();
+  },{passive:false});
 
-    </div>
-    <script type='text/javascript'>
-      var statusElement = document.getElementById('status');
-      var progressElement = document.getElementById('progress');
-      var spinnerElement = document.getElementById('spinner');
-      var Module = {
-        preRun: [],
-        postRun: [],
-        print: (function() {
-          var element = document.getElementById('output');
-          if (element) element.value = ''; // clear browser cache
-          return function(text) {
-            if (arguments.length > 1) text = Array.prototype.slice.call(arguments).join(' ');
-            // These replacements are necessary if you render to raw HTML
-            //text = text.replace(/&/g, "&amp;");
-            //text = text.replace(/</g, "&lt;");
-            //text = text.replace(/>/g, "&gt;");
-            //text = text.replace('\n', '<br>', 'g');
-            console.log(text);
-            if (element) {
-              element.value += text + "\n";
-              element.scrollTop = element.scrollHeight; // focus on bottom
-            }
-          };
-        })(),
-        printErr: function(text) {
-          if (arguments.length > 1) text = Array.prototype.slice.call(arguments).join(' ');
-          if (0) { // XXX disabled for safety typeof dump == 'function') {
-            dump(text + '\n'); // fast, straight to the real console
-          } else {
-            console.error(text);
-          }
-        },
-        canvas: (function() {
-          var canvas = document.getElementById('canvas');
-          // As a default initial behavior, pop up an alert when webgl context is lost. To make your
-          // application robust, you may want to override this behavior before shipping!
-          // See http://www.khronos.org/registry/webgl/specs/latest/1.0/#5.15.2
-          canvas.addEventListener("webglcontextlost", function(e) { alert('WebGL context lost. You will need to reload the page.'); e.preventDefault(); }, false);
-          return canvas;
-        })(),
-        setStatus: function(text) {
-          if (!Module.setStatus.last) Module.setStatus.last = { time: Date.now(), text: '' };
-          if (text === Module.setStatus.last.text) return;
-          var m = text.match(/([^(]+)\((\d+(\.\d+)?)\/(\d+)\)/);
-          var now = Date.now();
-          if (m && now - Module.setStatus.last.time < 30) return; // if this is a progress update, skip it if too soon
-          Module.setStatus.last.time = now;
-          Module.setStatus.last.text = text;
-          if (m) {
-            text = m[1];
-            progressElement.value = parseInt(m[2])*100;
-            progressElement.max = parseInt(m[4])*100;
-            progressElement.hidden = false;
-            spinnerElement.hidden = false;
-          } else {
-            progressElement.value = null;
-            progressElement.max = null;
-            progressElement.hidden = true;
-            if (!text) spinnerElement.hidden = true;
-          }
-          statusElement.innerHTML = text;
-        },
-        totalDependencies: 0,
-        monitorRunDependencies: function(left) {
-          this.totalDependencies = Math.max(this.totalDependencies, left);
-          Module.setStatus(left ? 'Preparing... (' + (this.totalDependencies-left) + '/' + this.totalDependencies + ')' : 'All downloads complete.');
-        }
-      };
-      Module.setStatus('Downloading...');
-      window.onerror = function() {
-        Module.setStatus('Exception thrown, see JavaScript console');
-        spinnerElement.style.display = 'none';
-        Module.setStatus = function(text) {
-          if (text) Module.printErr('[post-exception status] ' + text);
-        };
-      };
-
-      // Work-around chromium autoplay policy
-      // https://github.com/emscripten-core/emscripten/issues/6511
-      function resumeAudio(e) {
-	  if (typeof Module === 'undefined'
-	      || typeof Module.SDL2 == 'undefined'
-	      || typeof Module.SDL2.audioContext == 'undefined')
-	      return;
-	  if (Module.SDL2.audioContext.state == 'suspended') {
-	      Module.SDL2.audioContext.resume();
-	  }
-	  if (Module.SDL2.audioContext.state == 'running') {
-	      document.getElementById('canvas').removeEventListener('click', resumeAudio);
-	      document.removeEventListener('keydown', resumeAudio);
-	  }
-      }
-      document.getElementById('canvas').addEventListener('click', resumeAudio);
-      document.addEventListener('keydown', resumeAudio);
-    </script>
-    <script async type="text/javascript" src="CSE2.js"></script>
-  </body>
+  $('fs').addEventListener('click',function(){
+    var f=canvas.requestFullscreen||canvas.webkitRequestFullscreen||canvas.mozRequestFullScreen;
+    if(f)f.call(canvas);canvas.focus();
+  });
+})();
+</script>
+<script async src="CSE2.js"></script>
+</body>
 </html>
